@@ -35,6 +35,7 @@ autoinstall:
   user-data:
     packages:
       - qemu-guest-agent
+      - hyperv-daemons
     hostname: dev
     power_state:
       mode: poweroff

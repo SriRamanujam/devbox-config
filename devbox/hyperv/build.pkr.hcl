@@ -36,14 +36,68 @@ source "hyperv-iso" "fedora_34" {
     # to ensure that the install completes.
     # The major variables here are internet speed (the install does have to download
     # some packages) and disk io speed, of course.
-    communicator = "ssh"
-    ssh_username = "sramanujam"
-    ssh_private_key_file = "~/.ssh/id_rsa"
-    ssh_timeout = "3h"
+    communicator = "none"
+    shutdown_timeout = "3h"
+    disable_shutdown = true
 }
+
+source "hyperv-iso" "ubuntu_2104" {
+    iso_url = "http://releases.ubuntu.com/21.04/ubuntu-21.04-live-server-amd64.iso"
+    iso_checksum = "sha256:e4089c47104375b59951bad6c7b3ee5d9f6d80bfac4597e43a716bb8f5c1f3b0"
+
+    # Serving the autoinstall file from the files directory
+    http_directory = "./files"
+
+    # Hyper-V configuration.
+    disk_size = "262144"
+    memory = "2048"
+    vm_name = "dev_ubuntu-2104"
+    cpus = 2
+    generation = 2
+    enable_secure_boot = true
+    secure_boot_template = "MicrosoftUEFICertificateAuthority"
+    skip_export = true
+    switch_name = "Default Switch"
+
+    # This boot command comes from the official Vagrant
+    # bento box.
+    boot_command = [
+                " <wait>",
+                " <wait>",
+                " <wait>",
+                " <wait>",
+                " <wait>",
+                "c",
+                "<wait>",
+                "set gfxpayload=keep",
+                "<enter><wait>",
+                "linux /casper/vmlinuz quiet<wait>",
+                " autoinstall<wait>",
+                " ds=nocloud-net<wait>",
+                "\\;s=http://<wait>",
+                "{{.HTTPIP}}<wait>",
+                ":{{.HTTPPort}}/<wait>",
+                " ---",
+                "<enter><wait>",
+                "initrd /casper/initrd<wait>",
+                "<enter><wait>",
+                "boot<enter><wait>"
+    ]
+
+    # We don't need to run any scripts after the initial provisioning is done,
+    # so we can get away with no communicator and setting a long shutdown timeout
+    # to ensure that the install completes.
+    # The major variables here are internet speed (the install does have to download
+    # some packages) and disk io speed, of course.
+    communicator = "none"
+    shutdown_timeout = "3h"
+    disable_shutdown = true
+}
+
 
 build {
     sources = [
-        "sources.hyperv-iso.fedora_34"
+        "sources.hyperv-iso.fedora_34",
+        "sources.hyperv-iso.ubuntu_2104"
     ]
 }
