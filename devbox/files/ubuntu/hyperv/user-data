@@ -8,7 +8,7 @@ autoinstall:
   network:
     network:
       ethernets:
-        enp1s0:
+        eth0:
           dhcp4: true
       version: 2
   apt:
@@ -34,8 +34,7 @@ autoinstall:
         EOF
   user-data:
     packages:
-      - qemu-guest-agent
-      - hyperv-daemons
+      - linux-azure
     hostname: dev
     power_state:
       mode: poweroff

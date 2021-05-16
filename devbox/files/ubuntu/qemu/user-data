@@ -1,0 +1,49 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US.UTF-8
+  keyboard:
+    layout: us
+    variant: dvorak
+  network:
+    network:
+      ethernets:
+        enp1s0:
+          dhcp4: true
+      version: 2
+  apt:
+    geoip: true
+    preserve_sources_list: false
+    primary:
+    - arches: [amd64, i386]
+      uri: http://us.archive.ubuntu.com/ubuntu/
+    - arches: [default]
+      uri: http://ports.ubuntu.com/ubuntu-ports
+  storage:
+    layout:
+      name: direct
+  ssh:
+    allow-pw: false
+    install-server: true
+    authorized-keys: []
+  late-commands:
+      - >-
+        cat > /target/etc/udev/rules.d/85-block-scheduler.rules << EOF
+        # Set scheduler for all disks to be none. Let the host OS handle it.
+        ACTION=="add|change", KERNEL=="sd[a-z]|vd[a-z]", ATTR{queue/scheduler}="none"
+        EOF
+  user-data:
+    packages:
+      - qemu-guest-agent
+    hostname: dev
+    power_state:
+      mode: poweroff
+    users:
+      - name: sramanujam
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        gecos: "Sri Ramanujam"
+        lock_passwd: true
+        shell: /bin/bash
+        ssh_import_id: None
+        ssh_authorized_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCdoHM5jBLqp0BXURGQUkVeoA9PlV/YJPoSdLNFtNLwivu6blstziXzeAamzm+zZhUTA0I7OsO3JiiZ4K53pdi+Bg/ABn2xaN4R2fJd0ws8d5fPRwUT36znQtCY2I0dJiggyr1llLOrEhk7lPPxoEzjpBwrb6IiB8h4553M8fngJr5ZAWacH7bG0Rfq3qJdAFCuVK8HytyGfe2+VbUE6z+XQrRldQXLAnkMxMOrsvJRxWehUnfBkoS6MaJaq6sqFIbRchck+1WyxpTGQxdC33vgBfw0W1HWXdbAdZFQ8Nn4dKKPdCoPhanafqgBXI2spLxpq6T5Ba/aUFNKWsF+xlF9

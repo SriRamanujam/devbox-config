@@ -4,7 +4,7 @@ source "hyperv-iso" "fedora_34" {
     iso_checksum = "sha256:eb617779a454f9792a84985d1d6763f78c485e89a0d09e9e62b4dabcd540aff1"
 
     # Serving the kickstart file from the files directory
-    http_directory = "./files"
+    http_directory = "./files/fedora/hyperv"
 
     # This boot command selects the "Install Fedora 34" option (by default the boot screen
     # has "Test media and install fedora 34" selected, which is redundant since Packer has
@@ -46,7 +46,7 @@ source "hyperv-iso" "ubuntu_2104" {
     iso_checksum = "sha256:e4089c47104375b59951bad6c7b3ee5d9f6d80bfac4597e43a716bb8f5c1f3b0"
 
     # Serving the autoinstall file from the files directory
-    http_directory = "./files"
+    http_directory = "./files/ubuntu/hyperv"
 
     # Hyper-V configuration.
     disk_size = "262144"
